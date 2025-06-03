@@ -1,0 +1,161 @@
+/* Reset de bază */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Georgia', serif;
+  background-color: #f8f5f2;
+  color: #333;
+  line-height: 1.6;
+}
+
+header, footer {
+  background-color: #2e0e44;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  color: #bfa046;
+  font-weight: 700;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  padding: 10px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color .3s;
+}
+
+nav a:hover {
+  color: #bfa046;
+}
+
+#searchBar {
+  display: block;
+  margin: 20px auto;
+  padding: 10px;
+  width: calc(100% - 40px);
+  max-width: 600px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.products, .product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.product {
+  position: relative;      /* context pentru overflow */
+  overflow: hidden;        /* ascunde excesul imaginii la hover */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  padding: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.product img {
+  width: 100%;            /* umple lățimea cardului */
+  height: 200px;          /* înălțime fixă pentru consistență */
+  object-fit: cover;      /* taie și poziționează imaginea pentru a umple spațiul fără distorsionare */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform .3s;
+}
+
+.product img:hover {
+  transform: scale(1.2);
+}
+
+.product h3 {
+  margin: 10px 0 5px;
+  color: #222;
+  cursor: pointer;
+}
+
+.product p {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.wishlist-btn {
+  background-color: green;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: auto;
+  transition: background-color .3s;
+}
+
+.wishlist-btn:hover {
+  background-color: #005900;
+}
+
+/* Popup */
+#overlay {
+  display: none;
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
+  z-index: 900;
+}
+
+#product-details {
+  display: none;
+  position: fixed;
+  top:50%; left:50%;
+  transform: translate(-50%,-50%);
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 0 15px rgba(0,0,0,0.3);
+  z-index:1000;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+#product-details img#det-img {
+  max-width: 80vw;    /* imagine mai mică și centrată */
+  max-height: 60vh;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0 auto 15px;
+  border-radius: 5px;
+}
+
+#product-details h3 {
+  color: #4b0082;
+}
+
+#product-details .close-btn {
+  background: #4b0082;
+  color: #fff;
+  border: none;
+  padding:8px 15px;
+  border-radius:5px;
+  cursor:pointer;
+  float: right;
+}
+

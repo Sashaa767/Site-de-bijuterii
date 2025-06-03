@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>In Cos - Sasha Bijuterii</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .delete-btn {
+      background-color: #c0392b;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .delete-btn:hover {
+      background-color: #922b21;
+    }
+
+    .buy-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .buy-btn:hover {
+      background-color: #c0392b;
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 900;
+    }
+
+    #product-details {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    #product-details img {
+      max-width: 80vw;
+      max-height: 60vh;
+      display: block;
+      margin: 0 auto 15px;
+      border-radius: 5px;
+    }
+
+    #product-details h3 {
+      color: #4b0082;
+      margin-bottom: 5px;
+    }
+
+    #product-details .close-btn {
+      background: #4b0082;
+      color: #fff;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      float: right;
+    }
+
+    #buyFormContainer {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      z-index: 1001;
+      max-width: 90vw;
+    }
+
+    #buyFormContainer input {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #confirmationMessage {
+      display: none;
+      text-align: center;
+      background: #d4edda;
+      color: #155724;
+      padding: 15px;
+      margin: 20px;
+      border-radius: 5px;
+      border: 1px solid #c3e6cb;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>In Cos - Sasha Bijuterii</h1>
+</header>
+
+<nav>
+  <a href="index.html">Înapoi la Magazin</a>
+</nav>
+
+<div class="products" id="wishlistContainer"></div>
+
+<footer>
+  <p>Contacte: contact@sashajewellery.md | Telefon: +373 600 000 00</p>
+</footer>
+
+<!-- Popup detalii produs -->
+<div id="overlay" onclick="closeDetails()"></div>
+<div id="product-details">
+  <img id="det-img" src="" alt="">
+  <h3 id="det-nume"></h3>
+  <p id="det-pret"></p>
+  <p id="det-desc"></p>
+  <button class="close-btn" onclick="closeDetails()">Închide</button>
+</div>
+
+<!-- Formular Cumpără -->
+<div id="buyFormContainer">
+  <h3>Completează pentru a cumpăra</h3>
+  <input type="text" id="nume" placeholder="Nume">
+  <input type="text" id="prenume" placeholder="Prenume">
+  <input type="email" id="email" placeholder="Email">
+  <input type="tel" id="telefon" placeholder="Telefon">
+  <button class="buy-btn" onclick="submitForm()">Trimite comanda</button>
+</div>
+
+<div id="confirmationMessage">În curând operatorul vă va apela pentru a finaliza comanda!</div>
+
+<script>
+  let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+  function loadWishlist() {
+    const container = document.getElementById('wishlistContainer');
+    container.innerHTML = '';
+    if (wishlist.length === 0) {
+      container.innerHTML = '<p style="text-align:center;">Coșul este gol.</p>';
+      return;
+    }
+    wishlist.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'product';
+      card.innerHTML = `
+        <a href="#" onclick="showDetails(${i})">
+          <img src="${p.imagine}" alt="${p.nume}">
+        </a>
+        <h3>
+          <a href="#" style="color:black;" onclick="showDetails(${i})">${p.nume}</a>
+        </h3>
+        <p>${p.pret}</p>
+      `;
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete-btn';
+      delBtn.textContent = 'Șterge';
+      delBtn.onclick = () => removeFromWishlist(i);
+      card.appendChild(delBtn);
+
+      const buyBtn = document.createElement('button');
+      buyBtn.className = 'buy-btn';
+      buyBtn.textContent = 'Cumpără';
+      buyBtn.onclick = () => openBuyForm();
+      card.appendChild(buyBtn);
+
+      container.appendChild(card);
+    });
+  }
+
+  function removeFromWishlist(index) {
+    wishlist.splice(index, 1);
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    loadWishlist();
+  }
+
+  function showDetails(index) {
+    const p = wishlist[index];
+    document.getElementById('det-img').src = p.imagine;
+    document.getElementById('det-nume').textContent = p.nume;
+    document.getElementById('det-pret').textContent = p.pret;
+    document.getElementById('det-desc').textContent = p.descriere;
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('product-details').style.display = 'block';
+  }
+
+  function closeDetails() {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('product-details').style.display = 'none';
+  }
+
+  function openBuyForm() {
+    document.getElementById('buyFormContainer').style.display = 'block';
+  }
+
+  function submitForm() {
+    const nume = document.getElementById('nume').value.trim();
+    const prenume = document.getElementById('prenume').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const telefon = document.getElementById('telefon').value.trim();
+
+    if (!nume || !prenume || !email || !telefon) {
+      alert("Completează toate câmpurile!");
+      return;
+    }
+
+    document.getElementById('buyFormContainer').style.display = 'none';
+    document.getElementById('confirmationMessage').style.display = 'block';
+
+    setTimeout(() => {
+      document.getElementById('confirmationMessage').style.display = 'none';
+      document.getElementById('nume').value = '';
+      document.getElementById('prenume').value = '';
+      document.getElementById('email').value = '';
+      document.getElementById('telefon').value = '';
+    }, 5000);
+  }
+
+  loadWishlist();
+</script>
+
+</body>
+</html>

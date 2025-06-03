@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sasha Bijuterii</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>Sasha Bijuterii</h1>
+</header>
+
+<nav>
+  <a href="#ceasuri">Ceasuri</a>
+  <a href="#coliere">Coliere</a>
+  <a href="#inele">Inele</a>
+  <a href="#cercei">Cercei</a>
+  <a href="#contact">Contacte</a>
+  <a href="In Cos.html">În Coș</a>
+</nav>
+
+<input type="text" id="searchBar" placeholder="Caută produsul..." onkeyup="searchProducts()" />
+
+<div id="produse"></div>
+
+<footer id="contact">
+  <p>Contacte: contact@sashabijuterii.md | Telefon: +373 600 000 00</p>
+</footer>
+
+<!-- Overlay pentru detalii -->
+<div id="overlay" onclick="closeDetails()"></div>
+
+<div id="product-details">
+  <img id="det-img" src="" alt="Detaliu produs">
+  <h3 id="det-nume"></h3>
+  <p id="det-pret"></p>
+  <p id="det-desc"></p>
+  <button class="close-btn" onclick="closeDetails()">Închide</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
